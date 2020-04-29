@@ -19,11 +19,17 @@ router.get("/", function (req, res, next) {
     try {
       const response = await axios.get(url);
       const data = response.data;
+      res.setHeader("content-type", "text/plain");
+      if (data.includes(search)) {
+        res.send(`search string : 
+        ${search}
+        was found in the text`);
+      } else {
+        res.send(`Did not find: ${search}`);
+      }
       // console.log(data);
       // res.setHeader("content-type", "text/html");
-      res.setHeader("content-type", "text/plain");
       // res.send(data);
-      res.send(`your search string is: ${search}`);
     } catch (error) {
       console.log(error);
     }
