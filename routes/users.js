@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-var https = require("https");
+// var https = require("https");
 const axios = require("axios");
 
 const url1 = "https://jsonplaceholder.typicode.com/posts/1";
@@ -11,19 +11,25 @@ const url2 =
 
 router.get("/", function (req, res, next) {
   // res.send("respond with a resource");
+  console.log("req.params", req.params);
+  console.log("req.body", req.body);
+  const { search } = req.query;
+  console.log("req.query - search", search);
+  const getData = async (url) => {
+    try {
+      const response = await axios.get(url);
+      const data = response.data;
+      // console.log(data);
+      // res.setHeader("content-type", "text/html");
+      res.setHeader("content-type", "text/plain");
+      // res.send(data);
+      res.send(`your search string is: ${search}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  https.get(url2, (res) => {
-    // console.log("res", res);
-    res.setEncoding("utf8");
-    let body = "";
-    res.on("data", (data) => {
-      body += data;
-    });
-    res.on("end", () => {
-      // body = JSON.parse(body);
-      console.log(body);
-    });
-  });
+  getData(url2);
   // respond to request
   // res.setHeader("content-type", "text/plain");
 
