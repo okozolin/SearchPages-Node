@@ -1,0 +1,16 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00b7ff;
+}
+
+input {
+  padding: 10px;
+  margin: 15px;
+  border: 1 lightslategray solid;
+  border-radius: 4px;
+  font-size: 18px;
+}
