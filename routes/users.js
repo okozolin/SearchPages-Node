@@ -8,42 +8,49 @@ const url2 =
   "https://www.bvd.co.il/%d7%a2%d7%99%d7%a6%d7%95%d7%91-%d7%97%d7%93%d7%a8%d7%99%d7%9d-%d7%a2%d7%99%d7%a6%d7%95%d7%91-%d7%97%d7%93%d7%a8-%d7%a2%d7%99%d7%a6%d7%95%d7%91-%d7%97%d7%93%d7%a8%d7%99-%d7%94%d7%91%d7%99%d7%aa/%d7%a2%d7%99%d7%a6%d7%95%d7%91-%d7%97%d7%93%d7%a8%d7%99-%d7%a9%d7%99%d7%a0%d7%94-%d7%9b%d7%9c-%d7%9e%d7%94-%d7%a9%d7%9b%d7%93%d7%90%d7%99-%d7%9c%d7%93%d7%a2%d7%aa/%d7%94%d7%9b%d7%9c-%d7%91%d7%97%d7%93%d7%a8-%d7%90%d7%97%d7%93-%d7%a2%d7%99%d7%a6%d7%95%d7%91-%d7%a1%d7%95%d7%95%d7%99%d7%98%d7%aa-%d7%a9%d7%99%d7%a0%d7%94-%d7%aa%d7%9c-%d7%90%d7%91%d7%99%d7%91%d7%99/";
 
 //  Get urls to search in
-(async () => {
-  const bookmarks = await bookmarksParse();
-  console.log("XX--got the bookmarks");
-  console.log("XX--bookmarks", bookmarks);
-})().catch((err) => console.error(err));
+// (async () => {
+//   const bookmarks = await bookmarksParse();
+//   console.log("XX--got the bookmarks");
+//   console.log("XX--bookmarks", bookmarks);
+// })().catch((err) => console.error(err));
 
-/* GET users listing. */
+/* GET users search string */
 router.get("/", function (req, res, next) {
   // res.send("respond with a resource");
   const { search } = req.query;
-  const getData = async (url) => {
+  const getData = async () => {
+    let response,
+      data,
+      output = `<h2>The search string is "${search}"</h2>\n\n`;
     try {
-      const response = await axios.get(url);
-      const data = response.data;
-      res.setHeader("content-type", "text/plain");
-      if (data.includes(["מיטה", "ספריה"])) {
-        res.send(`search string : 
-        ${search}
-        was found in the text`);
+      if (search) {
+        const bookmarks = await bookmarksParse();
+        // console.log("XX--bookmarks", bookmarks);
+        for (let link of bookmarks) {
+          console.log("link", link);
+          response = await axios.get(link.url);
+          data = response.data;
+          if (data.includes(search)) {
+            output += `
+            <ul>
+              <li>
+                <a href="${link.url}">
+                  ${link.title}
+                </a>
+              </li>
+            </ul>\n`;
+          }
+        }
+        res.setHeader("content-type", "text/html");
+        res.send(output);
       } else {
-        res.send(`Did not find: ${search}`);
+        res.redirect(301, "/");
       }
-      // console.log(data);
-      // res.setHeader("content-type", "text/html");
-      // res.send(data);
     } catch (error) {
       console.log(error);
     }
   };
-
-  getData(url2);
-  // respond to request
-  // res.setHeader("content-type", "text/plain");
-
-  // res.end("hello, world!");
-  // res.send("http://www.google.com");
+  getData();
 });
 
 module.exports = router;

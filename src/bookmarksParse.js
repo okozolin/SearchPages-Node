@@ -8,10 +8,12 @@ const filePath = path.join(publicDir, "bookmarks.html");
 const parsedFile = (html) => {
   const listlen = $("dt > a", html).length;
   const urls = [];
+  let elm = "";
   for (let i = 0; i < listlen; i++) {
+    elm = $("dt > a", html)[i];
     urls.push({
-      url: $("dt > a", html)[i].attribs.href,
-      title: $("dt > a", html)[i].children[0].data.replace(/\s\s+/g, " "), // remove also more then one cpace and newline
+      url: elm.attribs.href,
+      title: elm.children[0].data.replace(/\s\s+/g, " "), // remove also more then one cpace and newline
     });
   }
   return urls;
