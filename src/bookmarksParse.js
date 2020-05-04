@@ -1,4 +1,4 @@
-const fs = require("fs").promises;
+const { readFile } = require("fs").promises;
 const $ = require("cheerio");
 const path = require("path");
 
@@ -22,7 +22,7 @@ const parsedFile = (html) => {
 const bookmarksParse = async function () {
   console.log("this is bookmarksParse");
   try {
-    const file = await fs.readFile(filePath, "utf8");
+    const file = await readFile(filePath, "utf8");
     return parsedFile(file);
   } catch (err) {
     console.error(err);
