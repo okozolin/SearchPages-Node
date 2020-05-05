@@ -1,40 +1,42 @@
-var express = require("express");
-var router = express.Router();
-const axios = require("axios");
-const bookmarksParse = require("../src/bookmarksParse");
+const express = require("express");
+const usersRouter = express.Router();
 
-/* GET users search string and pages data */
-router.get("/", function (req, res, next) {
-  try {
-    const { search } = req.query;
-    let output = `
+function router(pages) {
+  usersRouter.route("/").get((req, res, next) => {
+    try {
+      const { search } = req.query;
+      let output = `
       <a href="/">Back</a>\n
       <h2>The search string is "${search}"</h2>\n\n
       `;
-    if (search) {
-      const { pages } = res.locals;
-      for (let link of pages) {
-        console.log("link", link);
-        const { url, title, content } = pages;
-        if (content.includes(search)) {
-          output += `
-            <ul>
-              <li>
-                <a href="${url}">
-                  ${title}
-                </a>
-              </li>
-            </ul>\n`;
-        }
+      if (search && pages) {
+        console.log("got pages in users");
+        // for (let link of pages) {
+        //   console.log("link", link);
+        //   const { url, title, content } = pages;
+        //   if (content.includes(search)) {
+        //     output += `
+        //       <ul>
+        //         <li>
+        //           <a href="${url}">
+        //             ${title}
+        //           </a>
+        //         </li>
+        //       </ul>\n`;
+        //   }
+        // }
+        // res.setHeader("content-type", "text/html");
+        // res.send(output);
+        res.send("got through if inside users");
+      } else {
+        // res.redirect(301, "/");
+        res.send("not suppose to be here");
       }
-      res.setHeader("content-type", "text/html");
-      res.send(output);
-    } else {
-      res.redirect(301, "/");
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
-  }
-});
+  });
+  return usersRouter;
+}
 
 module.exports = router;
