@@ -2,15 +2,17 @@ const express = require("express");
 const usersRouter = express.Router();
 
 function router(pages) {
-  usersRouter.route("/").get((req, res, next) => {
+  console.log("inside users router - pages:--", pages);
+  usersRouter.get("/", (req, res, next) => {
     try {
       const { search } = req.query;
       let output = `
       <a href="/">Back</a>\n
       <h2>The search string is "${search}"</h2>\n\n
       `;
-      if (search && pages) {
-        console.log("got pages in users");
+      // if (search && pages) {
+      if (search) {
+        console.log("got pages in users", pages);
         // for (let link of pages) {
         //   console.log("link", link);
         //   const { url, title, content } = pages;

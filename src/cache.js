@@ -20,9 +20,13 @@ module.exports = {
   clear() {
     return cache.clear();
   },
-  isExpired(key, days) {
+  isExpired(key, hours) {
     const [_, timestamp] = cache.get(key);
-
-    return Date.now() - timestamp > days;
+    console.log("timestamp----", timestamp);
+    console.log("date now", Date.now());
+    const diff = (Date.now() - timestamp) / (1000 * 60 * 60);
+    console.log("Date.now() - timestamp---", diff);
+    // return (Date.now() - timestamp) / (1000 * 60 * 60) > hours;
+    return diff > hours;
   },
 };

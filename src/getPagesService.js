@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const bookmarksParse = require("../src/bookmarksParse");
+const bookmarksParse = require("./bookmarksParse");
 
 const getPages = async () => {
   let response,

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
+    "dev": "DEBUG=searchpages-node:* npm start",
     "debug": "node --inspect-brk app.js"
   },
   "dependencies": {
