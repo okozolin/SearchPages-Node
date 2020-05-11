@@ -1,44 +1,53 @@
 const express = require("express");
-const usersRouter = express.Router();
+const router = express.Router();
 
-function router(pages) {
-  console.log("inside users router - pages:--", pages);
-  usersRouter.get("/", (req, res, next) => {
-    try {
-      const { search } = req.query;
-      let output = `
+router.get("/", (req, res, next) => {
+  try {
+    const {
+      query: { search },
+      pages,
+    } = req;
+    console.log(
+      "does pages exist? --",
+      pages.length > 0,
+      "pages.length = ",
+      pages.length
+    );
+    let output = `
       <a href="/">Back</a>\n
-      <h2>The search string is "${search}"</h2>\n\n
+      <h2>The  string is "${search}"</h2>\n\n
       `;
-      // if (search && pages) {
-      if (search) {
-        console.log("got pages in users", pages);
-        // for (let link of pages) {
-        //   console.log("link", link);
-        //   const { url, title, content } = pages;
-        //   if (content.includes(search)) {
-        //     output += `
-        //       <ul>
-        //         <li>
-        //           <a href="${url}">
-        //             ${title}
-        //           </a>
-        //         </li>
-        //       </ul>\n`;
-        //   }
-        // }
-        // res.setHeader("content-type", "text/html");
-        // res.send(output);
-        res.send("got through if inside users");
-      } else {
-        // res.redirect(301, "/");
-        res.send("not suppose to be here");
+    if (search && pages.length > 0) {
+      console.log("inside if search && pages.length");
+      for (let link of pages) {
+        console.log("link", link);
+        const { url, title, pageContent } = link;
+        if (pageContent.includes(search)) {
+          output += `
+            <ul>
+              <li>
+                <a href="${url}">
+                  ${title}
+                </a>
+              </li>
+            </ul>\n`;
+        }
       }
-    } catch (error) {
-      console.log(error);
+      console.log("got through if inside users");
+      res.setHeader("content-type", "text/html");
+      res.send(output);
+    } else {
+      // res.redirect(301, "/");
+      console.log(
+        "not suppose to be here - search && pages.length",
+        search,
+        pages.length
+      );
+      res.send("not suppose to be here");
     }
-  });
-  return usersRouter;
-}
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 module.exports = router;
