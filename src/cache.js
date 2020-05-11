@@ -6,6 +6,8 @@ module.exports = {
   },
 
   set(key, value) {
+    console.log("setting cache -key: value", key, ":");
+    // console.log("setting cache -key: value", key, ":", value[3].title);
     return cache.set(key, [value, Date.now()]);
   },
 
@@ -22,11 +24,7 @@ module.exports = {
   },
   isExpired(key, hours) {
     const [_, timestamp] = cache.get(key);
-    console.log("timestamp----", timestamp);
-    console.log("date now", Date.now());
     const diff = (Date.now() - timestamp) / (1000 * 60 * 60);
-    console.log("Date.now() - timestamp---", diff);
-    // return (Date.now() - timestamp) / (1000 * 60 * 60) > hours;
     return diff > hours;
   },
 };
