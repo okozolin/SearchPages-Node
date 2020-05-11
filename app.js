@@ -3,6 +3,8 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const indexRouter = require("./routes/index");
+const usersRouter = require("./routes/users");
+
 const Cache = require("./src/cache");
 const getPages = require("./src/getPagesService");
 
@@ -13,40 +15,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// let pages=""
-// app.use(function (req, res, next) {
-//   console.log("inside app use")
-//   // const cexpired = Cache.isExpired("pages", 7)
-//   // console.log("Cache.isExpired(pages, 7)---", cexpired)
-//   if (!Cache.has("pages" || Cache.isExpired("pages", 20))) {
-//   // if (!Cache.has("pages")) {
-//     const response = "await getPages()";
-//     console.log("app cache response:", response);
-//     Cache.set("pages", response);
-//   }
-//   pages = Cache.get("pages")
-//   console.log("pages inside app.use", pages)
-//   next()
-// })
-function test() {
-  let pages;
-  console.log("inside function test");
+const getPagesMiddlware = async (req, res, next) => {
   if (!Cache.has("pages" || Cache.isExpired("pages", 20))) {
-    const response = "--await getPages()---";
-    console.log("app cache response:", response);
+    const response = await getPages();
+    console.log("getPagesMiddlware response:");
+    // console.log("getPagesMiddlware response:", response[3].title);
     Cache.set("pages", response);
   }
-  pages = Cache.get("pages");
-  console.log("pages inside function test", pages);
-  return pages;
-}
-// let pages = "--the pages content--";
-let pages = test();
+  next();
+};
 
-app.use("/", indexRouter);
-let usersRouter = require("./routes/users")(pages);
+const cacheGetMiddleware = (req, res, next) => {
+  req.pages = Cache.get("pages");
+  next();
+  return;
+};
 
-app.use("/users", usersRouter);
+app.use("/", getPagesMiddlware, indexRouter);
+app.use("/users", cacheGetMiddleware, usersRouter);
 app.use(express.static(path.join(__dirname, "public")));
 
 module.exports = app;
