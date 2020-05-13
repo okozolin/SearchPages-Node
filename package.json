@@ -5,7 +5,8 @@
   "scripts": {
     "start": "nodemon ./bin/www",
     "dev": "DEBUG=searchpages-node:* npm start",
-    "debug": "nodemon --inspect ./bin/www"
+    "debug": "nodemon --inspect ./bin/www",
+    "debugNoNodemon": "node --inspect ./bin/www"
   },
   "dependencies": {
     "axios": "^0.19.2",
