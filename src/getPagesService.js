@@ -1,47 +1,70 @@
 const axios = require("axios");
 const fs = require("fs");
-const { writeFile, access, readFile } = require("fs").promises;
+const { access, readFile } = fs.promises;
+const { Readable, Transform } = require("stream");
+
 const path = require("path");
 const bookmarksParse = require("./bookmarksParse");
 
 const publicDir = path.join(__dirname, "../public");
-const filePath = path.join(publicDir, "pages.json");
+const filePath = path.join(publicDir, "pagesstream.json");
 
+// STREAMS
+// ---------------------------------
+let pagesStream = new Readable({
+  objectMode: true,
+  read() {},
+});
+
+const stringifyTransform = new Transform({
+  writableObjectMode: true,
+  transform(chunk, encoding, callback) {
+    this.push(JSON.stringify(chunk) + "\n");
+    callback();
+  },
+});
+const parseTransform = new Transform({
+  // writableObjectMode: true,
+  transform(chunk, encoding, callback) {
+    this.push(JSON.parse(chunk) + "\n");
+    callback();
+  },
+});
+
+// -------------
 const pagesFileExist = (filepath) => {
   return new Promise((resolve, reject) => {
     access(filepath, fs.constants.R_OK | fs.constants.W_OK)
       .then(() => {
-        console.log("The file exists. value  is : ");
+        console.log("The file exists");
         resolve(true);
       })
       .catch(() => {
-        console.error("The file does not exist. value  is : ");
+        console.error("The file does not exist");
         resolve(false);
       });
   });
 };
 
-const savePagesToFile = async function (filepath, pages) {
-  try {
-    console.log("saving pages to file");
-    const sliced = pages.slice(0, 4); // for dev purposes, the file is too large for JSON.stringify . need to solve this
-    const jsonContent = JSON.stringify(sliced);
-    // const jsonContent = JSON.stringify(pages);
-    console.log("------XXX-----pages");
-    await writeFile(filepath, jsonContent);
-    console.log("savePagesToFile output after write file");
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 const getPages = async () => {
   const exist = await pagesFileExist(filePath);
   console.log("pagesFileExist", exist);
+
   let pages = [];
   if (exist) {
+    // const src = fs.createReadStream(filePath, { encoding: "utf8" });
+    // src.pipe(parseTransform);
+    let counter = 1;
     const file = await readFile(filePath, "utf8");
-    pages = JSON.parse(file);
+    const fileSplit = file.split("\n");
+    fileSplit.pop(); //remove the last item , it is redundant
+
+    for (let link of fileSplit) {
+      page = JSON.parse(link);
+      console.log(counter++);
+      // data = response.data;
+      pages.push(page);
+    }
     return pages;
   } else {
     let response, data;
@@ -53,10 +76,17 @@ const getPages = async () => {
       let { url, title } = link;
       response = await axios.get(url);
       console.log(counter++);
-      data = response.data;
+      // data = response.data;
       pages.push({ url, title, pageContent: data });
+      pagesStream.push({ url, title, pageContent: response.data });
     }
-    await savePagesToFile(filePath, pages);
+    pagesStream.push(null);
+    console.log("pages.length: ", pages.length);
+    console.log("pagesStream.length: ", pagesStream.length);
+    const writePagesToFileStream = fs.createWriteStream(filePath);
+    pagesStream.pipe(stringifyTransform).pipe(writePagesToFileStream);
+
+    // await savePagesToFile(filePath, pages);
     return pages;
   }
 };

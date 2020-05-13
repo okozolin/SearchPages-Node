@@ -18,9 +18,7 @@ router.get("/", (req, res, next) => {
       <h2>The  string is "${search}"</h2>\n\n
       `;
     if (search && pages.length > 0) {
-      console.log("inside if search && pages.length");
       for (let link of pages) {
-        console.log("link", link);
         const { url, title, pageContent } = link;
         if (pageContent.includes(search)) {
           output += `
@@ -37,13 +35,13 @@ router.get("/", (req, res, next) => {
       res.setHeader("content-type", "text/html");
       res.send(output);
     } else {
-      // res.redirect(301, "/");
-      console.log(
-        "not suppose to be here - search && pages.length",
-        search,
-        pages.length
-      );
-      res.send("not suppose to be here");
+      res.redirect(301, "/");
+      // console.log(
+      //   "not suppose to be here - search && pages.length",
+      //   search,
+      //   pages.length
+      // );
+      // res.send("not suppose to be here");
     }
   } catch (error) {
     console.log(error);

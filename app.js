@@ -31,7 +31,7 @@ const cacheGetMiddleware = (req, res, next) => {
   return;
 };
 
-app.use("/", getPagesMiddlware, indexRouter);
+app.use("/", indexRouter, getPagesMiddlware);
 app.use("/users", cacheGetMiddleware, usersRouter);
 app.use(express.static(path.join(__dirname, "public")));
 
