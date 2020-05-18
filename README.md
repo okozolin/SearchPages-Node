@@ -26,6 +26,7 @@ This is a lengthy process because of the number of the links (lots of https call
 3. Transform stream for JSON.Stringify operation
 4. Pipe the streams
 5. Caching
+6. Readline async await for loop
 
 <hr>
 
