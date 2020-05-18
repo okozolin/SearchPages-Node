@@ -7,12 +7,6 @@ router.get("/", (req, res, next) => {
       query: { search },
       pages,
     } = req;
-    console.log(
-      "does pages exist? --",
-      pages.length > 0,
-      "pages.length = ",
-      pages.length
-    );
     let output = `
       <a href="/">Back</a>\n
       <h2>The  string is "${search}"</h2>\n\n
@@ -20,7 +14,7 @@ router.get("/", (req, res, next) => {
     if (search && pages.length > 0) {
       for (let link of pages) {
         const { url, title, pageContent } = link;
-        if (pageContent.includes(search)) {
+        if (pageContent.indexOf(search) != -1) {
           output += `
             <ul>
               <li>
@@ -36,12 +30,6 @@ router.get("/", (req, res, next) => {
       res.send(output);
     } else {
       res.redirect(301, "/");
-      // console.log(
-      //   "not suppose to be here - search && pages.length",
-      //   search,
-      //   pages.length
-      // );
-      // res.send("not suppose to be here");
     }
   } catch (error) {
     console.log(error);

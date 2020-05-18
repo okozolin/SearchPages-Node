@@ -19,7 +19,6 @@ const getPagesMiddlware = async (req, res, next) => {
   if (!Cache.has("pages" || Cache.isExpired("pages", 20))) {
     const response = await getPages();
     console.log("getPagesMiddlware response:");
-    // console.log("getPagesMiddlware response:", response[3].title);
     Cache.set("pages", response);
   }
   next();
