@@ -24,7 +24,7 @@ module.exports = {
   },
   isExpired(key, hours) {
     const [_, timestamp] = cache.get(key);
-    const diff = (Date.now() - timestamp) / (1000 * 60 * 60);
+    const diff = (Date.now() - timestamp) / (1000 * 60 * 60); // Modify to magic numbers. give it meaningful names to explain what 60, 1000 represent
     return diff > hours;
   },
 };
