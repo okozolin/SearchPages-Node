@@ -36,7 +36,7 @@ This is a lengthy process because of the number of the links (lots of https call
 
 ## Run
 
-<I> \$ npm run dev </I>
+<I> \$ npm start </I>
 
 ## Note
 
