@@ -1,3 +1,7 @@
+const MILISECONDS_in_second = 1000;
+const SECONDS_in_minute = 60;
+const MINUTES_in_hour = 60;
+
 const cache = new Map();
 module.exports = {
   has(key) {
@@ -24,7 +28,9 @@ module.exports = {
   },
   isExpired(key, hours) {
     const [_, timestamp] = cache.get(key);
-    const diff = (Date.now() - timestamp) / (1000 * 60 * 60);
+    const diff =
+      (Date.now() - timestamp) /
+      (MILISECONDS_in_second * SECONDS_in_minute * MINUTES_in_hour);
     return diff > hours;
   },
 };

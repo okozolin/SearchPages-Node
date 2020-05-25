@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 const getPagesMiddlware = async (req, res, next) => {
-  if (!Cache.has("pages" || Cache.isExpired("pages", 20))) {
+  if (!Cache.has("pages") || Cache.isExpired("pages", 20)) {
     const response = await getPages();
     console.log("getPagesMiddlware response:");
     Cache.set("pages", response);

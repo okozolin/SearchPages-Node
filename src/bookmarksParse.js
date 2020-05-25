@@ -6,10 +6,10 @@ const publicDir = path.join(__dirname, "../public");
 const filePath = path.join(publicDir, "bookmarks.html");
 
 const parsedFile = (html) => {
-  const listlen = $("dt > a", html).length;
+  const listLen = $("dt > a", html).length;
   const urls = [];
   let elm = "";
-  for (let i = 0; i < listlen; i++) {
+  for (let i = 0; i < listLen; i++) {
     elm = $("dt > a", html)[i];
     urls.push({
       url: elm.attribs.href,
