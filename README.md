@@ -32,11 +32,11 @@ This is a lengthy process because of the number of the links (lots of https call
 
 ## Installation
 
-<I> \$ npm install </I>
+`$ npm install`
 
 ## Run
 
-<I> \$ npm start </I>
+`$ npm start`
 
 ## Note
 
