@@ -1,5 +1,7 @@
 # Web pages scraping and search utility
 
+![SearchPages preview](love-data.jpg)
+
 The purpose of this utility is to search for information inside a specified list of links that are stored on the 'bookmarks.html' file. This is a standard bookmarks file that is saved from the Chrome browser.
 
 To perform this textual search, the websites denoted by these links are scraped first.
