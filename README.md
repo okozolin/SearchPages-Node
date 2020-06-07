@@ -8,6 +8,10 @@ To perform this textual search, the websites denoted by these links are scraped 
 
 This is a lengthy process because of the number of the links (lots of https calls), also which results in a huge amount of data that cannot be stored or manipulated in memory since it causes Node to reach its limitations.
 
+The following diagram describes the flow of actions and routes of the project.
+
+![Flow diagram](general-diagram.jpg)
+
 ## The requirenments
 
 1. Read links to scrape from a bookmarks file.
